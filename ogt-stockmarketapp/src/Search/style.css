@@ -1,0 +1,10 @@
+#search-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+#search-bar {
+    margin: 0 0 0 10px;
+    height: 30px;
+    border-radius: 20px;
+}
