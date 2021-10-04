@@ -1,27 +1,29 @@
 import React from "react";
 import CardForList from "../CardForList";
 import "./style.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteStock } from "../features/sharesDataList/sharesDataList";
 
 export default function MyList(props) {
 
-
+    const dispatch = useDispatch();
     const myReduxListForMyList = useSelector(state => state.myStocks.value)
 
     function deleteListItem(itemKey) {
-        // console.log("====>>>",itemKey)
-        props.myList.splice(itemKey, 1);
-        // console.log("====>>>",props.myList)
-        props.setMyList([...props.myList])
+        // // console.log("====>>>",itemKey)
+        // props.myList.splice(itemKey, 1);
+        // // console.log("====>>>",props.myList)
+        // props.setMyList([...props.myList])
+        dispatch(deleteStock(itemKey))
     }
 
-    function goBack() {
-        props.setSwitchFlag(false)
-    }
+    // function goBack() {
+    //     props.setSwitchFlag(false)
+    // }
 
     return (
         <div>
-            <button id="back" onClick={goBack}>back</button>
+            {/* <button id="back" onClick={goBack}>back</button> */}
             <table>
                 <thead>
                     <tr>

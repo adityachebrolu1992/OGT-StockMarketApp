@@ -20,7 +20,7 @@ export default function Search(props) {
         let index = randomValueGenerator();
         if (searchedKeyWord.length >= 3) {
             let request = require("request");
-            let url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchedKeyWord}&apikey=` + key[index];
+            let url = `https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${searchedKeyWord}&apikey=${key[index]}`;
             request.get({
                 url: url,
                 json: true,

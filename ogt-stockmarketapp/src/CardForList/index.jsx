@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./style.css";
-import { deleteStock, reduceNumberOfShares } from "../features/sharesDataList/sharesDataList";
+import { reduceNumberOfShares } from "../features/sharesDataList/sharesDataList";
 import { useDispatch } from "react-redux";
 
 export default function CardForList(props) {
@@ -9,8 +9,12 @@ export default function CardForList(props) {
     const dispatch = useDispatch();
 
     const [valueOfShare, setValueOfShare] = useState(10);
-    const [totalSharesLeft, setTotalSharesLeft] = useState(props.val["numberOfShares"]);
+    const [totalSharesLeft, setTotalSharesLeft] = setTotalSharesLeft(props.val["numberOfShares"])
     const [sharesToBeSold, setSharesToBeSold] = useState(1);
+
+    // useEffect(()=>{
+    //     setTotalSharesLeft(props.val["numberOfShares"])
+    // },[])
 
     function randomValueGenerator() {
         let min = 1;
@@ -53,13 +57,15 @@ export default function CardForList(props) {
                 props.setWalletAmount((+props.walletAmount + (+sharesToBeSold * truncedTempPrice)).toFixed(2));
 
                 if (sharesToBeSold == totalSharesLeft) {
-                    dispatch(deleteStock(event));
-                    setSharesToBeSold(1);
+                    console.log("sharesToBeSold == totalSharesLeft");
+
+                    props.deleteListItem(event)
                     return;
                 } else {
                     setTotalSharesLeft(totalSharesLeft - sharesToBeSold);
-                    let reductionPayload = [event, totalSharesLeft - sharesToBeSold]
-                    dispatch(reduceNumberOfShares)
+                    let reductionPayload = [event, (totalSharesLeft - sharesToBeSold), ((+sharesToBeSold * truncedTempPrice).toFixed(2))]
+                    dispatch(reduceNumberOfShares(reductionPayload));
+                    console.log("else case ran");
                 }
                 setSharesToBeSold(1);
                 console.log(truncedTempPrice);

@@ -8,3 +8,11 @@
 #wallet-text {
   color: white;
 }
+.router-links{
+  text-decoration: none;
+  color: white;
+  margin: 0 15px;
+  padding: 8px;
+  background-color: rgb(32, 6, 92);
+  border-radius: 5px;
+}
