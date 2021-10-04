@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import "./style.css";
+import { useSelector, useDispatch } from "react-redux";
+import { add, edit } from "../features/sharesDataList/sharesDataList"
 
 export default function CompanysDetail(props) {
+
+    const myReduxList = useSelector(state => state.myStocks.value);
+    const dispatch = useDispatch();
 
     const [numberOfShares, setNumberOfShares] = useState("");
     const [cautionFlag, setCautionFlag] = useState(false);
@@ -11,32 +16,39 @@ export default function CompanysDetail(props) {
 
 
     function listHandler() {
+        console.log("Redux array==>>", myReduxList);
+        // dispatch(add(newListItem));
+
+
         if (numberOfShares > 0) {
             setAmountDisplayFlag(false);
             if (props.walletAmount - costOfPurchase >= 0) {
                 let companyPresentInList = false;
                 let companyIndexInMyList = null;
                 let newArrayThatModifiedMyList = [];
-                for (let i = 0; i < props.myList.length; i++) {
-                    if (props.myList[i]["Name"] == props.companyDetails["Name"]) {
-                        console.log("im in")
+
+                for (let i = 0; i < myReduxList.length; i++) {
+                    if (myReduxList[i]["Name"] == props.companyDetails["Name"]) {
+                        console.log("for loop shows list has this name")
                         companyPresentInList = true;
                         companyIndexInMyList = i;
                         break;
                     }
                 }
+
                 props.setWalletAmount((Number(props.walletAmount).toFixed(2) - costOfPurchase.toFixed(2)).toFixed(2));
+
                 // console.log("add to list-->>",props.myList);
                 if (companyPresentInList) {
-                    newArrayThatModifiedMyList = [...props.myList];
-                    newArrayThatModifiedMyList[companyIndexInMyList]["numberOfShares"] =Number(newArrayThatModifiedMyList[companyIndexInMyList]["numberOfShares"])+Number( numberOfShares);
-                    newArrayThatModifiedMyList[companyIndexInMyList]["costOfPurchase"] =Number(newArrayThatModifiedMyList[companyIndexInMyList]["costOfPurchase"])+ Number(+numberOfShares * Number(props.sharePrice).toFixed(2));
-                    props.setMyList(newArrayThatModifiedMyList);
-                // console.log("companyPresentInList:",companyPresentInList,"index:",companyIndexInMyList)
+                    console.log("inside companyPresentInList");
+                    let myPayload = [companyIndexInMyList, Number(numberOfShares), (Number(props.sharePrice * numberOfShares).toFixed(2))]
+                    dispatch(edit(myPayload));
+                    // dispatch(add(newListItem));
                 } else {
-                    props.setMyList([...props.myList, newListItem]);
+                    dispatch(add(newListItem));
                 }
                 // console.log("setList-->>",props.MyList[0]);
+                // dispatch(add(newListItem))
                 setNumberOfShares("");
             } else {
                 alert("Not enough cash in the wallet")

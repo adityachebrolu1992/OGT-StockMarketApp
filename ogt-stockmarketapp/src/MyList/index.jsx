@@ -1,8 +1,12 @@
 import React from "react";
 import CardForList from "../CardForList";
 import "./style.css";
+import { useSelector } from "react-redux";
 
 export default function MyList(props) {
+
+
+    const myReduxListForMyList = useSelector(state => state.myStocks.value)
 
     function deleteListItem(itemKey) {
         // console.log("====>>>",itemKey)
@@ -29,7 +33,7 @@ export default function MyList(props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {props.myList.map((val, idx) => {
+                    {myReduxListForMyList.map((val, idx) => {
                         return <CardForList idx={idx} deleteListItem={deleteListItem} setWalletAmount={props.setWalletAmount} walletAmount={props.walletAmount} val={val} />
                     })
                     }

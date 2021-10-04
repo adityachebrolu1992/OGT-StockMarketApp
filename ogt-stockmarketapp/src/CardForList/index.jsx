@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import "./style.css";
+import { deleteStock, reduceNumberOfShares } from "../features/sharesDataList/sharesDataList";
+import { useDispatch } from "react-redux";
 
 export default function CardForList(props) {
+
+
+    const dispatch = useDispatch();
 
     const [valueOfShare, setValueOfShare] = useState(10);
     const [totalSharesLeft, setTotalSharesLeft] = useState(props.val["numberOfShares"]);
@@ -48,13 +53,15 @@ export default function CardForList(props) {
                 props.setWalletAmount((+props.walletAmount + (+sharesToBeSold * truncedTempPrice)).toFixed(2));
 
                 if (sharesToBeSold == totalSharesLeft) {
-                    props.deleteListItem(event);
+                    dispatch(deleteStock(event));
+                    setSharesToBeSold(1);
                     return;
                 } else {
                     setTotalSharesLeft(totalSharesLeft - sharesToBeSold);
-                    setSharesToBeSold(1);
+                    let reductionPayload = [event, totalSharesLeft - sharesToBeSold]
+                    dispatch(reduceNumberOfShares)
                 }
-
+                setSharesToBeSold(1);
                 console.log(truncedTempPrice);
             }
         });
