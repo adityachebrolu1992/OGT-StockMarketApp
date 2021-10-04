@@ -77,7 +77,7 @@ export default function CompanysDetail(props) {
         // console.log(costOfPurchase);
         setCautionFlag(false);
         if (selectedShares > 0) {
-            setNewListItem({ "key": props.companyDetails["Symbol"], "Name": props.companyDetails["Name"], "numberOfShares": numberOfShares, "costOfPurchase": (+selectedShares * +sharePrice).toFixed(2) })
+            setNewListItem({ "key": props.companyDetails["Symbol"], "Name": props.companyDetails["Name"], "numberOfShares": numberOfShares, "costOfPurchase": ((+selectedShares * +sharePrice).toFixed(2)) })
             // alert(`you are purchasing  ${selectedShares} shares at a price of ${sharePrice}Rs which amounts to ${(+selectedShares*+sharePrice).toFixed(2)}Rs which will be deducted from your wallet`);
 
         }
