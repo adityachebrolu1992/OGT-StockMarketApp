@@ -42,9 +42,26 @@ export default function CompanysDetail(props) {
                 if (companyPresentInList) {
                     console.log("inside companyPresentInList");
                     let myPayload = [companyIndexInMyList, Number(numberOfShares), (Number(props.sharePrice * numberOfShares).toFixed(2))]
+                    fetch("http://localhost:9999/myStockFeed",{
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body:JSON.stringify(newListItem),
+                    });
+                    dispatch(add(newListItem));
                     dispatch(edit(myPayload));
+
                     // dispatch(add(newListItem));
                 } else {
+                    
+                    fetch("http://localhost:9999/myStockFeed",{
+                        method:"POST",
+                        headers:{
+                            "Content-Type":"application/json"
+                        },
+                        body:JSON.stringify(newListItem),
+                    });
                     dispatch(add(newListItem));
                 }
                 // console.log("setList-->>",props.MyList[0]);
@@ -71,13 +88,14 @@ export default function CompanysDetail(props) {
     }
 
     function cautionTheCustomer() {
+        let id=new Date().valueOf();
         let selectedShares = +numberOfShares;
         let sharePrice = props.sharePrice;
         setCostOfPurchase(+selectedShares * +sharePrice);
         // console.log(costOfPurchase);
         setCautionFlag(false);
         if (selectedShares > 0) {
-            setNewListItem({ "key": props.companyDetails["Symbol"], "Name": props.companyDetails["Name"], "numberOfShares": numberOfShares, "costOfPurchase": ((+selectedShares * +sharePrice).toFixed(2)) })
+            setNewListItem({"id":id, "key": props.companyDetails["Symbol"], "Name": props.companyDetails["Name"], "numberOfShares": numberOfShares, "costOfPurchase": ((+selectedShares * +sharePrice).toFixed(2)) })
             // alert(`you are purchasing  ${selectedShares} shares at a price of ${sharePrice}Rs which amounts to ${(+selectedShares*+sharePrice).toFixed(2)}Rs which will be deducted from your wallet`);
 
         }
