@@ -9,8 +9,9 @@ export default function CardForList(props) {
     const dispatch = useDispatch();
 
     const [valueOfShare, setValueOfShare] = useState(10);
-    const [totalSharesLeft, setTotalSharesLeft] = setTotalSharesLeft(props.val["numberOfShares"])
+    const [totalSharesLeft, setTotalSharesLeft] = useState(props.val["numberOfShares"])
     const [sharesToBeSold, setSharesToBeSold] = useState(1);
+    // console.log("number of shares==>>",props.val["numberOfShares"]);
 
     // useEffect(()=>{
     //     setTotalSharesLeft(props.val["numberOfShares"])
@@ -74,6 +75,6 @@ export default function CardForList(props) {
 
     }
     return (
-        <tr key={props.val["key"]} id="listCard-container"><td>{props.val["Name"]}</td><td>{totalSharesLeft}</td><td>{props.val["costOfPurchase"]}</td><td><button onClick={decreaseSharesToBeSold}>-</button>{sharesToBeSold}<button onClick={increaseSharesToBeSold}>+</button></td><td><button onClick={() => sellHandler(props.idx)}>Sell</button></td></tr>
+        <tr key={props.val["id"]} id="listCard-container"><td>{props.val["Name"]}</td><td>{totalSharesLeft}</td><td>{props.val["costOfPurchase"]}</td><td><button onClick={decreaseSharesToBeSold}>-</button>{sharesToBeSold}<button onClick={increaseSharesToBeSold}>+</button></td><td><button onClick={() => sellHandler(props.idx)}>Sell</button></td></tr>
     )
 }

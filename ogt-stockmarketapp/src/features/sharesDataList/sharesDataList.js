@@ -16,8 +16,8 @@ export const sharesDataList = createSlice({
             // console.log("i'm in redux store and array is ",state.value)
         },
         deleteStock: (state, action) => {
-            // state.value.splice(action.payload,1);
-            state.value = state.value.slice(0, action.payload) + state.value.slice(action.payload + 1, -1);
+            state.value.splice(action.payload,1);
+            state.value = state.value;
         },
         reduceNumberOfShares: (state, action) => {
             state.value[action.payload[0]]["numberOfShares"] = Number(action.payload[1]);

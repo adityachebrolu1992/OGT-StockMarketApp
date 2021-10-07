@@ -1,5 +1,8 @@
 {
   "name": "ogt-stockmarketapp",
+  "author": "Aditya",
+  "description": "Project that deals with stock market",
+  "keywords": ["stocks", "selling stocks", "buying stocks"],
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -12,7 +15,9 @@
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.0.1",
+    "express": "4.14.0",
+    "moment": "2.14.0"
   },
   "scripts": {
     "start": "react-scripts start",

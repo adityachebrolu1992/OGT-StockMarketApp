@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CardForList from "../CardForList";
 import "./style.css";
 import { useSelector, useDispatch } from "react-redux";
@@ -8,6 +8,17 @@ export default function MyList(props) {
 
     const dispatch = useDispatch();
     const myReduxListForMyList = useSelector(state => state.myStocks.value)
+
+    // useEffect(()=>{
+    //     console.log("fetch use Effect");
+    //     fetch("http://localhost:9999/myStockFeed",{
+    //     method:"POST",
+    //     headers:{
+    //         "Content-Type":"application/json"
+    //     },
+    //     body:JSON.stringify(),
+    // })
+    // },[])
 
     function deleteListItem(itemKey) {
         // // console.log("====>>>",itemKey)

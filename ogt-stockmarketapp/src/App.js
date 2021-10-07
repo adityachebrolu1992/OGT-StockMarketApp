@@ -4,8 +4,10 @@ import Search from './Search';
 import Header from './Header';
 import MyList from './MyList';
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { appendFile } from 'fs';
 
 function App() {
+
   const [myList, setMyList] = useState([]);
   const [walletAmount, setWalletAmount] = useState(30000);
   const [switchFlag, setSwitchFlag] = useState(false);
@@ -22,6 +24,7 @@ function App() {
       </div>
       <Link className="router-links" to="/search">Search</Link>
       <Link className="router-links" to="/myStocks">MyStocks</Link>
+      {/* <Link className="router-links" to="/hello">hello</Link> */}
       {/* <button onClick={switchToMyStocks}>My Stocks</button> */}
       <Switch>
         <Route path="/search">
