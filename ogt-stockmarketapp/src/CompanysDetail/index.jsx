@@ -16,12 +16,9 @@ export default function CompanysDetail(props) {
 
 
     function listHandler() {
-        console.log("Redux array==>>", myReduxList);
-        // dispatch(add(newListItem));
-
-
         if (numberOfShares > 0) {
             setAmountDisplayFlag(false);
+
             if (props.walletAmount - costOfPurchase >= 0) {
                 let companyPresentInList = false;
                 let companyIndexInMyList = null;
@@ -38,34 +35,45 @@ export default function CompanysDetail(props) {
 
                 props.setWalletAmount((Number(props.walletAmount).toFixed(2) - costOfPurchase.toFixed(2)).toFixed(2));
 
-                // console.log("add to list-->>",props.myList);
                 if (companyPresentInList) {
                     console.log("inside companyPresentInList");
-                    let myPayload = [companyIndexInMyList, Number(numberOfShares), (Number(props.sharePrice * numberOfShares).toFixed(2))]
-                    fetch("http://localhost:9999/myStockFeed",{
-                        method:"POST",
-                        headers:{
-                            "Content-Type":"application/json"
+                    let myPayload = [companyIndexInMyList, Number(numberOfShares), (Number(props.sharePrice * numberOfShares).toFixed(2))];
+                    fetch("http://localhost:9999/updateSearch", {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json',
                         },
-                        body:JSON.stringify(newListItem),
-                    });
-                    dispatch(add(newListItem));
-                    dispatch(edit(myPayload));
+                        body: JSON.stringify(myPayload)
+                    }).then(fetch("http://localhost:9999/myStocks").then(r => r.json()).then(r => {
+                        console.log("updated rvalue in get", r);
 
-                    // dispatch(add(newListItem));
-                } else {
-                    
-                    fetch("http://localhost:9999/myStockFeed",{
-                        method:"POST",
-                        headers:{
-                            "Content-Type":"application/json"
-                        },
-                        body:JSON.stringify(newListItem),
+                        dispatch(add(r));
+                        // console.log("outside array from get",myArr);
+                    }));
+                    fetch("http://localhost:9999/myStocks").then(r => r.json()).then(r => {
+                        console.log("updated rvalue in get", r);
+
+                        dispatch(add(r));
+                        // console.log("outside array from get",myArr);
                     });
-                    dispatch(add(newListItem));
+
+                } else {
+                    fetch("http://localhost:9999/search", {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(newListItem)
+                    }).then(fetch("http://localhost:9999/myStocks").then(r => r.json()).then(r => {
+                        console.log("rvalue in get", r);
+
+                        dispatch(add(r));
+                        // console.log("outside array from get",myArr);
+                    }));
+
+
+
                 }
-                // console.log("setList-->>",props.MyList[0]);
-                // dispatch(add(newListItem))
                 setNumberOfShares("");
             } else {
                 alert("Not enough cash in the wallet")
@@ -76,7 +84,6 @@ export default function CompanysDetail(props) {
     }
 
     function sharesInputHandler(event) {
-        // console.log("number of shares==",typeof event.target.value);
         let shares = event.target.value;
         setAmountDisplayFlag(true);
         if (shares[0] != "0" && shares >= 0 && shares <= 1000) {
@@ -88,16 +95,13 @@ export default function CompanysDetail(props) {
     }
 
     function cautionTheCustomer() {
-        let id=new Date().valueOf();
+        let id = new Date().valueOf();
         let selectedShares = +numberOfShares;
         let sharePrice = props.sharePrice;
         setCostOfPurchase(+selectedShares * +sharePrice);
-        // console.log(costOfPurchase);
         setCautionFlag(false);
         if (selectedShares > 0) {
-            setNewListItem({"id":id, "key": props.companyDetails["Symbol"], "Name": props.companyDetails["Name"], "numberOfShares": numberOfShares, "costOfPurchase": ((+selectedShares * +sharePrice).toFixed(2)) })
-            // alert(`you are purchasing  ${selectedShares} shares at a price of ${sharePrice}Rs which amounts to ${(+selectedShares*+sharePrice).toFixed(2)}Rs which will be deducted from your wallet`);
-
+            setNewListItem({ "id": id, "key": props.companyDetails["Symbol"], "Name": props.companyDetails["Name"], "numberOfShares": numberOfShares, "costOfPurchase": ((+selectedShares * +sharePrice).toFixed(2)) });
         }
     }
 

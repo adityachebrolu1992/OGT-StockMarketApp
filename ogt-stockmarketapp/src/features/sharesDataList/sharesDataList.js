@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
 export const sharesDataList = createSlice({
     name: "myStocks",
     initialState: {
@@ -7,16 +8,16 @@ export const sharesDataList = createSlice({
     },
     reducers: {
         add: (state, action) => {
-            state.value.push(action.payload);
-            // console.log("i'm in redux store and array is ",state.value)
+            // state.value.push(action.payload);
+            // fetch 
+            state.value = action.payload
         },
         edit: (state, action) => {
             state.value[action.payload[0]]["numberOfShares"] = Number(state.value[action.payload[0]]["numberOfShares"]) + Number(action.payload[1]);
             state.value[action.payload[0]]["costOfPurchase"] = Number(state.value[action.payload[0]]["costOfPurchase"]) + Number(action.payload[2]);
-            // console.log("i'm in redux store and array is ",state.value)
         },
         deleteStock: (state, action) => {
-            state.value.splice(action.payload,1);
+            state.value.splice(action.payload, 1);
             state.value = state.value;
         },
         reduceNumberOfShares: (state, action) => {

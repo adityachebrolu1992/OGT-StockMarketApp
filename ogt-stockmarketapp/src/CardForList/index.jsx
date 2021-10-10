@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./style.css";
-import { reduceNumberOfShares } from "../features/sharesDataList/sharesDataList";
+import { reduceNumberOfShares, add } from "../features/sharesDataList/sharesDataList";
 import { useDispatch } from "react-redux";
 
 export default function CardForList(props) {
-
+    // console.log("my value inside cardlist",props.val["id"]);
 
     const dispatch = useDispatch();
 
     const [valueOfShare, setValueOfShare] = useState(10);
     const [totalSharesLeft, setTotalSharesLeft] = useState(props.val["numberOfShares"])
     const [sharesToBeSold, setSharesToBeSold] = useState(1);
-    // console.log("number of shares==>>",props.val["numberOfShares"]);
-
-    // useEffect(()=>{
-    //     setTotalSharesLeft(props.val["numberOfShares"])
-    // },[])
 
     function randomValueGenerator() {
         let min = 1;
@@ -52,20 +47,60 @@ export default function CardForList(props) {
             } else if (res.statusCode !== 200) {
                 console.log('Status:', res.statusCode);
             } else {
-                // data is successfully parsed as a JSON object:
                 let tempPrice = +data["Global Quote"]["05. price"];
                 let truncedTempPrice = tempPrice.toFixed(2);
                 props.setWalletAmount((+props.walletAmount + (+sharesToBeSold * truncedTempPrice)).toFixed(2));
 
                 if (sharesToBeSold == totalSharesLeft) {
                     console.log("sharesToBeSold == totalSharesLeft");
-
-                    props.deleteListItem(event)
+                    fetch("http://localhost:9999/deleteData", {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify([event])
+                    }).then(fetch("http://localhost:9999/myStocks").then(r => r.json()).then(r => {
+                        // for(let i=0;i<r.length;i++){
+                        //     myArr.push(JSON.parse(r[i]));
+                        // }
+                        console.log("array after a company is deleted from get", r)
+                        dispatch(add(r));
+                    }));
+                    // let myArr=[];
+                    fetch("http://localhost:9999/myStocks").then(r => r.json()).then((r => {
+                        // for(let i=0;i<r.length;i++){
+                        //     myArr.push(JSON.parse(r[i]));
+                        // }
+                        console.log("array after a company is deleted from get", r);
+                        dispatch(add(r));
+                    }));
+                    // props.deleteListItem(event)
                     return;
                 } else {
                     setTotalSharesLeft(totalSharesLeft - sharesToBeSold);
-                    let reductionPayload = [event, (totalSharesLeft - sharesToBeSold), ((+sharesToBeSold * truncedTempPrice).toFixed(2))]
-                    dispatch(reduceNumberOfShares(reductionPayload));
+                    let reductionPayload = [event, (totalSharesLeft - sharesToBeSold), ((+sharesToBeSold * truncedTempPrice).toFixed(2)), props.val["Name"]];
+                    fetch("http://localhost:9999/sellSomeShares", {
+                        method: "PUT",
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(reductionPayload)
+                    }).then(fetch("http://localhost:9999/myStocks").then(r => r.json()).then(r => {
+                        // for(let i=0;i<r.length;i++){
+                        //     myArr.push(JSON.parse(r[i]));
+                        // }
+                        console.log("array after some shares sold from get", r)
+                        dispatch(add(r));
+                    }));
+                    // let myArr=[];
+                    fetch("http://localhost:9999/myStocks").then(r => r.json()).then(r => {
+                        // for(let i=0;i<r.length;i++){
+                        //     myArr.push(JSON.parse(r[i]));
+                        // }
+                        console.log("array after some shares sold from get", r)
+                        dispatch(add(r));
+                    });
+                    // dispatch(reduceNumberOfShares(reductionPayload));
                     console.log("else case ran");
                 }
                 setSharesToBeSold(1);
@@ -75,6 +110,6 @@ export default function CardForList(props) {
 
     }
     return (
-        <tr key={props.val["id"]} id="listCard-container"><td>{props.val["Name"]}</td><td>{totalSharesLeft}</td><td>{props.val["costOfPurchase"]}</td><td><button onClick={decreaseSharesToBeSold}>-</button>{sharesToBeSold}<button onClick={increaseSharesToBeSold}>+</button></td><td><button onClick={() => sellHandler(props.idx)}>Sell</button></td></tr>
+        <tr id="listCard-container"><td>{props.val["Name"]}</td><td>{totalSharesLeft}</td><td>{props.val["costOfPurchase"]}</td><td><button onClick={decreaseSharesToBeSold}>-</button>{sharesToBeSold}<button onClick={increaseSharesToBeSold}>+</button></td><td><button onClick={() => sellHandler(props.idx)}>Sell</button></td></tr>
     )
 }

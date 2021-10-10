@@ -2,39 +2,31 @@ import React, { useEffect } from "react";
 import CardForList from "../CardForList";
 import "./style.css";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteStock } from "../features/sharesDataList/sharesDataList";
+import { deleteStock, add } from "../features/sharesDataList/sharesDataList";
 
 export default function MyList(props) {
 
     const dispatch = useDispatch();
-    const myReduxListForMyList = useSelector(state => state.myStocks.value)
-
-    // useEffect(()=>{
-    //     console.log("fetch use Effect");
-    //     fetch("http://localhost:9999/myStockFeed",{
-    //     method:"POST",
-    //     headers:{
-    //         "Content-Type":"application/json"
-    //     },
-    //     body:JSON.stringify(),
-    // })
-    // },[])
-
+    let myReduxListForMyList = useSelector(state => state.myStocks.value);
+    // console.log("=======>>>>>>>>>>",myReduxListForMyList);
     function deleteListItem(itemKey) {
-        // // console.log("====>>>",itemKey)
-        // props.myList.splice(itemKey, 1);
-        // // console.log("====>>>",props.myList)
-        // props.setMyList([...props.myList])
+        fetch("http://localhost:9999/delete", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(itemKey)
+        });
         dispatch(deleteStock(itemKey))
     }
+    console.log("==++==++==>>", myReduxListForMyList);
 
-    // function goBack() {
-    //     props.setSwitchFlag(false)
-    // }
+    // useEffect(()=>{
+    //     fetch("http://localhost:9999/myStocks").then(r=>r.json()).then(r=>dispatch(add(r)));
+    // },[])
 
     return (
         <div>
-            {/* <button id="back" onClick={goBack}>back</button> */}
             <table>
                 <thead>
                     <tr>
@@ -47,7 +39,7 @@ export default function MyList(props) {
                 </thead>
                 <tbody>
                     {myReduxListForMyList.map((val, idx) => {
-                        return <CardForList idx={idx} deleteListItem={deleteListItem} setWalletAmount={props.setWalletAmount} walletAmount={props.walletAmount} val={val} />
+                        return <CardForList key={val["id"]} idx={idx} deleteListItem={deleteListItem} setWalletAmount={props.setWalletAmount} walletAmount={props.walletAmount} val={val} />
                     })
                     }
                 </tbody>
